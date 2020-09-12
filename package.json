@@ -1,0 +1,25 @@
+{
+  "name": "funprojectjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aiserrock/funProjectJs.git"
+  },
+  "author": "aiserrock",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aiserrock/funProjectJs/issues"
+  },
+  "homepage": "https://github.com/aiserrock/funProjectJs#readme",
+  "devDependencies": {
+    "electron": "^10.1.1",
+    "electron-packager": "^15.1.0",
+    "path": "^0.12.7",
+    "url": "^0.11.0"
+  }
+}
