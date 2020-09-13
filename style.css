@@ -64,7 +64,6 @@ table {
 .line{
     position: absolute;
     width: 10px;
-    height: 50px;
     background: #fff;
     left: 145px;
 }
@@ -81,7 +80,6 @@ table {
     color: #fff;
     background: black;
     font-size: 1.5rem;
-    cursor: pointer;
     font-family: sans-serif;
     font-weight: 700;
 }
@@ -107,4 +105,18 @@ table {
     display: flex;
     justify-content: center;
     align-self: center;
+}
+.btn{
+    padding: 10px 30px;
+}
+
+#topScore{
+    position:  fixed;
+    bottom: 0;
+    height: 200px;
+    width: 200px;
+    font-size: 30px;
+    padding: 80;
+    background-color: black;
+    color: white;
 }

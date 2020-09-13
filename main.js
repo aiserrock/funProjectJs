@@ -15,12 +15,14 @@ const keys = {
 };
 
 const setting = {
-    START: false,
-    SCORE: 0,
-    speed: 3,
-    traffic: 3
+    start: false,
+    score: 0,
+    speed: 0,
+    traffic: 0,
+    level: 0
 };
 
+let level = setting.level;
 //music settings
 AUDIO.loop = true;
 AUDIO.volume = 0.1;
@@ -32,8 +34,28 @@ CAR.classList.add('car');
 START.addEventListener('click', startGame);
 document.addEventListener('keydown', startRun);
 document.addEventListener('keyup', stopRun);
+//strong px game area
+GAME_AREA.style.height = Math.floor(document.documentElement.clientHeight / HEIGHT_ELEM)* HEIGHT_ELEM;
 
-function startGame(){
+function startGame(event){
+    const TARGET = event.target;
+    if(TARGET === START){
+        return;
+    }
+    switch(TARGET.id){
+        case 'easy':
+            setting.speed =3;
+            setting.traffic=4;
+            break;
+        case 'medium':
+            setting.speed =5;
+            setting.traffic=3;
+            break;
+        case 'hard':
+            setting.speed =8;
+            setting.traffic=2;
+            break;
+    }
     START.classList.add('hide');
     GAME_AREA.innerHTML='';
     AUDIO.play();
@@ -43,6 +65,7 @@ function startGame(){
         const line = document.createElement('div');
         line.classList.add('line');
         line.style.top = (i*HEIGHT_ELEM)+'px';
+        line.style.height = (HEIGHT_ELEM / 2) +'px';
         line.y = i*HEIGHT_ELEM;
         GAME_AREA.append(line);
     }
@@ -54,13 +77,13 @@ function startGame(){
         ENEMY.classList.add('enemy');
         ENEMY.y = -HEIGHT_ELEM * setting.traffic * (i+1);
         ENEMY.style.top = ENEMY.y + 'px';
-        ENEMY.style.left = Math.floor(Math.random() * (GAME_AREA.offsetWidth - 50)) + 'px';
+        ENEMY.style.left = Math.floor(Math.random() * (GAME_AREA.offsetWidth - HEIGHT_ELEM/2)) + 'px';
         ENEMY.style.background = `transparent url(./image/enemy${RANDOM_ENEMY}.png) center/ cover no-repeat`;
         GAME_AREA.append(ENEMY);
     }
 
-    setting.SCORE = 0;
-    setting.START = true;
+    setting.score = 0;
+    setting.start = true;
     GAME_AREA.append(CAR);
 
     //reload car after dtp
@@ -75,9 +98,14 @@ function startGame(){
 }
 
 function playGame(){
-    if (setting.START){
-        setting.SCORE += setting.speed;
-        SCORE.innerHTML = 'SCORE<br>'+setting.SCORE;
+    setting.level = Math.floor(setting.score /1500);
+    if(setting.level !== level){
+        level = setting.level;
+        setting.speed += 1;
+    }
+    if (setting.start){
+        setting.score += setting.speed;
+        SCORE.innerHTML = 'SCORE<br>'+setting.score;
 
         moveRoad();
         moveEnemy();
@@ -124,7 +152,7 @@ function moveRoad(){
          line.y += setting.speed;
          line.style.top = line.y + 'px';
 
-         if(line.y >= document.documentElement.clientHeight){
+         if(line.y >= GAME_AREA.offsetHeight){
              line.y = -HEIGHT_ELEM;
          }
     });
@@ -140,24 +168,34 @@ function moveEnemy(){
             carRect.right >= enemyRect.left &&
             carRect.left <= enemyRect.right &&
             carRect.bottom >= enemyRect.top){
-                setting.START = false;
+                setting.start = false;
                 AUDIO.pause();
                 AUDIO.currentTime = 0;
                 console.warn('DTP');
                 START.classList.remove('hide');
                 START.style.top = SCORE.offsetHeight;
+                //addLoaclStorage();
         }
 
         //###############################
         item.y += setting.speed/2;
         item.style.top = item.y + 'px';
-        if(item.y >= document.documentElement.clientHeight){
+        if(item.y >= GAME_AREA.offsetHeight){
             item.y = -HEIGHT_ELEM * setting.traffic;
-            item.style.left = Math.floor(Math.random() * (GAME_AREA.offsetWidth - 50)) + 'px';
+            item.style.left = Math.floor(Math.random() * (GAME_AREA.offsetWidth - HEIGHT_ELEM/2)) + 'px';
         }
     });
 }
 
 function getQuantityElements(heightElement){
-    return document.documentElement.clientHeight / heightElement + 1;
+    return (GAME_AREA.offsetHeight / heightElement) + 1;
 }
+
+// topScore.textContent = localStorage.getItem('funProject_score',setting.score) ?
+//     localStorage.getItem('funProject_score',setting.score):
+//     0;
+
+// const addLocalStorage = () => {
+//     localStorage.setItem('funProject_score',setting.score);
+//     topScore.textContetn = setting.score;
+// }
